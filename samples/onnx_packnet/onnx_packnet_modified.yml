@@ -1,0 +1,19 @@
+MyGroupNormalization:
+  attributes:
+    eps:
+      datatype: float32
+    num_groups:
+      datatype: int32
+  inputs:
+    tpg_input_0:
+      shape: -1x-1x-1x-1
+    tpg_input_1:
+      shape: -1x1x1
+    tpg_input_2:
+      shape: -1x1x1
+  outputs:
+    tpg_output_0:
+      shape: -1x-1x-1x-1
+  plugin_type: IPluginV2DynamicExt
+  # suppose we will start with fp32 implementation
+  support_format_combination: ["float32+float32+float32+float32"]

@@ -1,0 +1,12 @@
+MyCoordConvAC:
+  inputs:
+    tpg_input_0:
+      shape: -1x-1x-1x-1
+  outputs:
+    tpg_output_0:
+      shape: -1x-1x-1x-1
+  plugin_type: IPluginV2DynamicExt
+  support_format_combination:
+  - "float32+float32"
+  - "float16+float16"
+  - "int8+int8"

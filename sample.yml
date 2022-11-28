@@ -1,0 +1,158 @@
+# SPDX-FileCopyrightText: Copyright (c) <year> NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
+
+# custom IPluginV2IOExt
+# IPluginV2IOExt will insert a implicit batch dimension the custom onnx operator by default.
+# IPluginV2IOExt will use implicit batch, which means that the first dimension of each input and output
+# must be -1, and other dimension must be no dynamic. as shown below.
+sample_io_ext:
+    plugin_type: IPluginV2IOExt
+    inputs:
+        input0:
+            shape: -1x16x16
+        input1:
+            shape: -1x16x32x32
+    outputs:
+        output:
+            shape: -1x64
+    support_format_combination: ["float32+float32+float32"]
+
+# custom IPluginV2DynamicExt
+# IPluginV2DynamicExt use explicit batch dimension.
+sample_dynamic_ext_static_shape:
+    plugin_type: IPluginV2DynamicExt
+    inputs:
+        input0:
+            shape: 4x8x16
+        input1:
+            shape: 3x9x2
+    outputs:
+        output0:
+            shape: 1x72
+        output1:
+            shape: 4x7x8x1
+    support_format_combination: ["float32+float32+float32+float32"]
+
+# custom IPluginV2DynamicExt
+# IPluginV2DynamicExt use explicit batch dimension.
+sample_dynamic_ext_dynamic_shape:
+    plugin_type: IPluginV2DynamicExt
+    inputs:
+        input0:
+            shape: -1x-1x16
+        input1:
+            shape: -1x-1x-1
+    outputs:
+        output0:
+            shape: -1x72
+        output1:
+            shape: -1x-1x-1x1
+    support_format_combination: ["float32+float32+float32+float32"]
+
+# custom IPluginV2DynamicExt with attribute
+sample_dynamic_ext_with_attributes:
+    plugin_type: IPluginV2DynamicExt
+    inputs:
+        input0:
+            shape: -1x-1x16
+        input1:
+            shape: -1x-1x-1
+    outputs:
+        output0:
+            shape: -1x72
+        output1:
+            shape: -1x-1x-1x1
+    support_format_combination: ["float32+float32+float32+float32"]
+    attributes:
+        attr_a:
+            datatype: int32[]
+            default_value: [1,1,2,2]
+        attr_b:
+            datatype: float32
+            default_value: 1.5
+        attr_c:
+            datatype: char[]
+            default_value: ['a', 'b', 'c']
+        attr_d:
+            datatype: float16
+
+# custom operator name
+custom_add:
+    plugin_type: IPluginV2DynamicExt
+    # list all inputs here
+    inputs:
+        # each input must contain type, datatype and shape
+        input0:
+            # -1 mean dynamic shape
+            shape: 1x16x-1x-1
+        input1:
+            # -1 mean dynamic shape
+            shape: 1x16x-1x-1
+    outputs:
+        output:
+            # the output shape can be completely unknown, and calculated by getOutputDimensions()
+            shape: 1x16x-1x-1
+    # the support format comes form the inputs tensor and outputs tensor(initializer inputs are datatype determined),
+    # the combination must be specify in the order of inputs and outputs, e.g. in this case input0+input1+output
+    support_format_combination: ["float32+float32+float32", "float16+float16+float16"]
+
+    # attributes can be empty if doesn't exist.
+
+# custom operator name
+custom_conv:
+    # available option: IPluginV2DynamicExt, IPluginV2IOExt
+    plugin_type: IPluginV2DynamicExt
+    # list all inputs here
+    inputs:
+        # each input must contain type, datatype and shape
+        input.3:
+            # -1 mean dynamic shape
+            shape: 1x16x32x32
+        conv.weight:
+            shape: 16x32x3x3
+        conv.bias:
+            shape: 16
+    outputs:
+        output:
+            shape: 1x32x32x32
+    # the support format comes form the inputs tensor and outputs tensor(initializer inputs are datatype determined),
+    # please note that some operators has initializer inputs, then the initializer's datatype is determined. e.g. weights and bias
+    # are always float32 in this case.
+    # the support_format_combination below means we can support FP32 and FP16 calculation. 
+    support_format_combination: ["float32+float32+float32+float32", "float16+float32+float32+float16", "int8+float32+float32+int8"]
+    # each attribute must at least contain the datatype, the value can be deserialized from onnx operator during
+    # deserialization.
+    attributes:
+        dilations:
+            # the datatype may be a scalar or a vector
+            # availabe option: float64, float32, float16, int32, int16, int8, char
+            # [2] means vector size == 2.
+            # can be seen from the onnx operator, e.g. netron.
+            datatype: int32[2]
+        group:
+            datatype: int32
+        kernel_shape:
+            datatype: int32[2]
+        pads:
+            datatype: int32[2]
+        strides:
+            datatype: int32[2]

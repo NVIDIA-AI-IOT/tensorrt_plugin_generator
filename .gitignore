@@ -1,0 +1,4 @@
+src/__pycache__/*
+output/
+.vscode/
+*.onnx

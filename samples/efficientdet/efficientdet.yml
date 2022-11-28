@@ -1,0 +1,35 @@
+MyEfficientNMS:
+  attributes:
+    background_class:
+      datatype: int32
+    box_coding:
+      datatype: int32
+    iou_threshold:
+      datatype: float32
+    max_output_boxes:
+      datatype: int32
+    plugin_version:
+      datatype: char[]
+    score_activation:
+      datatype: int32
+    score_threshold:
+      datatype: float32
+  inputs:
+    tpg_input_0:
+      shape: -1x49104x4
+    tpg_input_1:
+      shape: -1x49104x90
+    tpg_input_2:
+      shape: 1x49104x4
+  outputs:
+    tpg_output_0:
+      shape: -1x-1
+    tpg_output_1:
+      shape: -1x-1x-1
+    tpg_output_2:
+      shape: -1x-1
+    tpg_output_3:
+      shape: -1x-1
+  plugin_type: IPluginV2DynamicExt
+  support_format_combination:
+  - "float32+float32+float32+int32+float32+float32+int32"

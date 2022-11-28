@@ -1,0 +1,19 @@
+MyGroupNormalization:
+  attributes:
+    eps:
+      datetype: float32
+    num_groups:
+      datetype: int32
+  inputs:
+    tpg_input_0:
+      shape: need_user_to_specify
+    tpg_input_1:
+      shape: need_user_to_specify
+    tpg_input_2:
+      shape: need_user_to_specify
+  outputs:
+    tpg_output_0:
+      shape: need_user_to_specify
+  plugin_type: IPluginV2DynamicExt
+  support_format_combination:
+  - need_user_to_specify

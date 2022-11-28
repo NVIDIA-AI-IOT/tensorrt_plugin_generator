@@ -1,0 +1,30 @@
+PFP:
+  inputs:
+    tpg_input_0:
+      shape: 320000x4
+    tpg_input_1:
+      shape: 1x1
+  outputs:
+    tpg_output_0:
+      shape: 10000x32x10
+    tpg_output_1:
+      shape: 1x1x10000x4
+    tpg_output_2:
+      shape: 1x1x1x5
+  plugin_type: IPluginV2DynamicExt
+  support_format_combination:
+  - 'float32+int32+float32+float32+float32'
+ScatterBEV:
+  inputs:
+    tpg_input_0:
+      shape: 10000x64
+    tpg_input_1:
+      shape: 1x1x10000x4
+    tpg_input_2:
+      shape: 1x1x1x5
+  outputs:
+    tpg_output_0:
+      shape: 1x64x496x432
+  plugin_type: IPluginV2DynamicExt
+  support_format_combination:
+  - 'float32+float32+float32+float32'

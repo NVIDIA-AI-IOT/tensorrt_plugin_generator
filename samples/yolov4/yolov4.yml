@@ -1,0 +1,39 @@
+MyBatchedNMS:
+  attributes:
+    backgroundLabelId:
+      datatype: int32
+    clipBoxes:
+      datatype: int32
+    iouThreshold:
+      datatype: float32
+    isNormalized:
+      datatype: int32
+    keepTopK:
+      datatype: int32
+    numClasses:
+      datatype: int32
+    plugin_version:
+      datatype: char[]
+    scoreThreshold:
+      datatype: float32
+    shareLocation:
+      datatype: int32
+    topK:
+      datatype: int32
+  inputs:
+    tpg_input_0:
+      shape: 1x10647x1x4
+    tpg_input_1:
+      shape: 1x10647x80
+  outputs:
+    tpg_output_0:
+      shape: 1x1
+    tpg_output_1:
+      shape: 1x1000x4
+    tpg_output_2:
+      shape: 1x1000
+    tpg_output_3:
+      shape: 1x1000
+  plugin_type: IPluginV2DynamicExt
+  support_format_combination:
+  - "float32+float32+int32+float32+float32+float32"
