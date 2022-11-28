@@ -1,5 +1,4 @@
 # TPG: TensorRT Plugin Generator
-![logo.png](./doc/logo.png)
 
 - [TPG: TensorRT Plugin Generator](#tpg-tensorrt-plugin-generator)
   - [1. Installation](#1-installation)
