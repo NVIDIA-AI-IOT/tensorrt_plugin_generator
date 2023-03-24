@@ -28,7 +28,6 @@ def read_yaml(path):
     with open(path, 'r') as stream:
         logging.info('load yaml: ' + path)
         data = yaml.safe_load(stream)
-        print(data)
         for node_name in data:
             logging.info('parse operator: ' + node_name)
             node = data[node_name]

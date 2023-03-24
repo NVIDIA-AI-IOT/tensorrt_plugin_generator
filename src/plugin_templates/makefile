@@ -27,7 +27,7 @@ CC      := g++
 LIBS    := -lnvinfer
 LDFLAGS := -L$trt_lib_dir
 INCLUDE := -I. -I$trt_include_dir -I$cuda_include_dir
-CXXFLAGS:= -std=c++14 -Wall -O2 $(INCLUDE)
+CXXFLAGS:= -std=c++14 -Wall -O2 $(INCLUDE) -Wno-deprecated-declarations
 SHARE   := -fPIC -shared -o
 SOURCE  := $(wildcard *.c) $(wildcard *.cpp)
 
