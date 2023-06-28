@@ -116,3 +116,36 @@ Test3:
         strides:
             datatype: int32[2]
             default_value: [1,1]
+
+Test4:
+    plugin_type: IPluginV2DynamicExt
+    inputs:
+        input.3:
+            shape: 1x16x32x32
+        conv.weight:
+            shape: 16x32x3x3
+        conv.bias:
+            shape: 16
+    outputs:
+        output:
+            shape: 1x32x32x32
+    support_format_combination:
+        - "float32+float32+float32+float32"
+        - "float16+float32+float32+float16"
+        - "int8+float32+float32+int8"
+    attributes:
+        dilations:
+            datatype: int32[2]
+            default_value: [1,1]
+        group:
+            datatype: int32
+            default_value: 1
+        kernel_shape:
+            datatype: int32[2]
+            default_value: [3,3]
+        pads:
+            datatype: int32[2]
+            default_value: [1,1]
+        strides:
+            datatype: int32[2]
+            default_value: [1,1]
