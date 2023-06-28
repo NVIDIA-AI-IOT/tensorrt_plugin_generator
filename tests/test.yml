@@ -148,4 +148,3 @@ Test4:
             default_value: [1,1]
         strides:
             datatype: int32[2]
-            default_value: [1,1]
