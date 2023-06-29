@@ -2,6 +2,8 @@
 
 - [TPG: TensorRT Plugin Generator](#tpg-tensorrt-plugin-generator)
   - [1. Installation](#1-installation)
+    - [1.1 Install from source code](#11-install-from-source-code)
+    - [1.2 install from pypi](#12-install-from-pypi)
   - [2. Usage](#2-usage)
     - [2.1 Generate plugin yaml for Unsupported Operators](#21-generate-plugin-yaml-for-unsupported-operators)
     - [2.2 Complete the yaml config](#22-complete-the-yaml-config)
@@ -12,10 +14,23 @@
 TPG is a tool that can quickly generate the plugin code(**NOT INCLUDE THE INFERENCE KERNEL IMPLEMENTATION**) for TensorRT unsupported operators. the user only need to focus on the plugin kernel implementation and doesn't need to worry about how does TensorRT plugin works or how to use the plugin API.
 ## 1. Installation
 
+This tool need onnx-graphsurgeon to parse the onnx, install it by:
+```
+pip3 install onnx_graphsurgeon --index-url https://pypi.ngc.nvidia.com
+```
+
+### 1.1 Install from source code
+
 ```
 git clone https://github.com/NVIDIA-AI-IOT/tensorrt_plugin_generator
 cd trt-plugin-generator
-pip3 install pyyaml
+python3 setup.py install
+```
+
+### 1.2 install from pypi
+
+```
+pip3 install trtpg
 ```
 
 ## 2. Usage
@@ -24,7 +39,7 @@ pip3 install pyyaml
 
 
 ```
-python tpg.py extract --onnx model.onnx --custom_operators custom_add,custom_conv --yaml plugin.yml
+trtpg extract --onnx model.onnx --custom_operators custom_add,custom_conv --yaml plugin.yml
 ```
 ![onnx.png](./doc/onnx.png)
 
@@ -46,12 +61,12 @@ For more information, you can refer to [how to edit the yaml](./doc/edit_yaml_co
 Once we have a valid yaml file, we can generate the plugin code all in once now:
 
 ```
-python tpg.py generate --yaml plugin.yml --output ./plugin_codes
+trtpg generate --yaml plugin.yml --output ./plugin_codes
 ```
 
 For more options(e.g. to specify the trt library path):
 ```
-python tpg.py generate -h
+trtpg generate -h
 ```
 
 We can see the generated plugin codes under ./plugin_codes. with a Makefile that can be used for compile a minimal dynamic library.

@@ -22,7 +22,7 @@
 import os
 import glob
 import sys
-sys.path.append("../src/")
+sys.path.append("../tpg/")
 split_lv1 = '------------------------------> '
 split_lv2 = '---------------> '
 from log import *
