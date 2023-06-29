@@ -1,4 +1,4 @@
-src/__pycache__/*
+tpg/__pycache__/*
 output/
 .vscode/
 *.onnx
