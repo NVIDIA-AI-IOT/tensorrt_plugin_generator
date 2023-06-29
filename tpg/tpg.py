@@ -35,7 +35,7 @@ class MyParser(argparse.ArgumentParser):
 
 def main():
     parser = MyParser()
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(dest='func')
     parser_extract = subparsers.add_parser("extract", help="generate yml from onnx")
     parser_extract.add_argument("--onnx", type=str, default='',
                         help="onnx for extraction")
@@ -70,6 +70,10 @@ def main():
                         help="to print the generate h, cpp and makefile to console")
     parser_generate.set_defaults(func=generate)
     args = parser.parse_args()
+
+    if args.func is None:
+        parser.print_help()
+        exit()
 
     args.func(args)
 
