@@ -14,11 +14,6 @@
 TPG is a tool that can quickly generate the plugin code(**NOT INCLUDE THE INFERENCE KERNEL IMPLEMENTATION**) for TensorRT unsupported operators. the user only need to focus on the plugin kernel implementation and doesn't need to worry about how does TensorRT plugin works or how to use the plugin API.
 ## 1. Installation
 
-This tool need onnx-graphsurgeon to parse the onnx, install it by:
-```
-pip3 install onnx_graphsurgeon --index-url https://pypi.ngc.nvidia.com
-```
-
 ### 1.1 Install from source code
 
 ```
