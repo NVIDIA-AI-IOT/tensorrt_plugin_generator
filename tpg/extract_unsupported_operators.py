@@ -25,9 +25,16 @@ import argparse
 import os
 import sys
 import onnx
-import onnx_graphsurgeon as gs
 import numpy as np
 import yaml
+
+try:
+    import onnx_graphsurgeon as gs
+except ModuleNotFoundError as e:
+    print("Automatic installing onnx_graphsurgeon.")
+    import pip
+    pip.main("install onnx_graphsurgeon --index-url https://pypi.ngc.nvidia.com".split(" "))
+    import onnx_graphsurgeon as gs
 
 template_dir = os.path.dirname(os.path.realpath(__file__)) + "/plugin_templates/"
 def get_supported_op_list(version):

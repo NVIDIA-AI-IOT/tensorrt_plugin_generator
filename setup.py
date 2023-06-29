@@ -10,8 +10,6 @@ required = None
 with open(path.join(this_directory, 'requirements.txt')) as f:
     required = f.read().splitlines()
 
-print(required)
-
 setup(name='trtpg',
       packages=find_packages(),
       version='1.0.1',
