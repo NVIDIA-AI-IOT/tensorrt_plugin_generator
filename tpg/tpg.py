@@ -24,10 +24,8 @@ import argparse
 
 import sys
 import os
-src_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)),'src')
-sys.path.insert(1, src_dir)
-from extract_unsupported_operators import generate_yaml
-from generate import *
+from tpg.extract_unsupported_operators import generate_yaml
+from tpg.generate import *
 
 class MyParser(argparse.ArgumentParser):
     def error(self, message):

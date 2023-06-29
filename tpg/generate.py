@@ -19,9 +19,9 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-from config import *
-from log import *
-from yaml_parser import read_yaml
+from tpg.config import *
+from tpg.log import *
+from tpg.yaml_parser import read_yaml
 
 import os
 import sys

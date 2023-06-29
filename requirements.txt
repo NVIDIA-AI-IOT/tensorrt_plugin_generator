@@ -1,0 +1,4 @@
+pyyaml
+numpy
+onnx
+onnx_graphsurgeon

@@ -20,8 +20,8 @@
 # DEALINGS IN THE SOFTWARE.
 
 import yaml
-from config import *
-from log import *
+from tpg.config import *
+from tpg.log import *
 
 def read_yaml(path):
     configs = []
