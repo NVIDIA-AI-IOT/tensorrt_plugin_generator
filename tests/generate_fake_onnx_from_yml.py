@@ -22,16 +22,15 @@
 import os
 import glob
 import sys
-sys.path.append("../tpg/")
 split_lv1 = '------------------------------> '
 split_lv2 = '---------------> '
-from log import *
+from tpg.log import *
 # Env setup
 logging.info(split_lv1 + "Install dependencies...")
 os.system("pip3 install pyyaml onnx numpy")
 os.system("pip3 install onnx_graphsurgeon --index-url https://pypi.ngc.nvidia.com")
 
-from yaml_parser import read_yaml
+from tpg.yaml_parser import read_yaml
 
 import argparse
 import shutil
@@ -148,7 +147,7 @@ def main():
 
     # Generate Plugin Code
     logging.info(split_lv1 + "Generate plugin...")
-    os.system(f'python3 ../tpg.py generate --yaml {yaml_file} --output {test_dir} > /dev/null 2>&1')
+    os.system(f'trtpg generate --yaml {yaml_file} --output {test_dir} > /dev/null 2>&1')
 
     # Compile and test with trtexec
     logging.info(split_lv1 + "Compile and test...")

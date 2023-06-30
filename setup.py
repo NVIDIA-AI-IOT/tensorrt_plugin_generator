@@ -12,7 +12,7 @@ with open(path.join(this_directory, 'requirements.txt')) as f:
 
 setup(name='trtpg',
       packages=find_packages(),
-      version='1.1.0',
+      version='1.2.0',
       classifiers=[
           'Intended Audience :: Developers',
           'Programming Language :: Python :: 3',
