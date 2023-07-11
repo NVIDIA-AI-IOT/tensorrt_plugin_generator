@@ -193,7 +193,8 @@ def get_plugin_field_type_str(str):
     else:
         return 'kUNKNOWN'
 
-def get_trt_datatype(str):
+def get_trt_datatype(format):
+    str = format.datatype
     if str.startswith("float16"):
         return 'kHALF'
     elif str.startswith("float32"):
@@ -206,6 +207,10 @@ def get_trt_datatype(str):
         return 'kBOOL'
     else:
         assert False, 'error: wrong datatype: '+str
+
+def get_trt_tensor_format(format):
+    str = format.tensor_format
+    return 'k' + str
 
 def codegen_plugin_attributes_emplace_back(config):
     template = "mPluginAttributes.emplace_back(PluginField(\"$attr_name\", nullptr, PluginFieldType::$field_Type, 1));"
@@ -321,10 +326,11 @@ def codegen_create_plugin(cxx_variables, onnx_variables, constructor_params):
 
     return ret_str
 
-def get_input_combination_str(param_name, format_combination, num_input, tensor_format):
+def get_input_combination_str(param_name, format_combination, num_input):
     ret_str = ''
     for i in range(num_input):
         datatype = get_trt_datatype(format_combination[i])
+        tensor_format = get_trt_tensor_format(format_combination[i])
         ret_str += f'{param_name}[{i}].type == DataType::{datatype} && {param_name}[{i}].format == TensorFormat::{tensor_format} &&\n            '
     return ret_str
 
@@ -424,15 +430,16 @@ def codegen_get_support_format_combination(config):
     num_io = num_input + num_output
     support_format_combination = config.support_format_combination
     for i in range(num_io):
-        tensor_format = 'kLINEAR'
         if i < num_input:
             ret_str += ('    if(pos == {})\n'.format(i))
             ret_str += ('    {\n')
             ret_str += ('        is_supported =\n')
             for j in range(len(support_format_combination) - 1):
                 option = get_trt_datatype(support_format_combination[j][i])
+                tensor_format = get_trt_tensor_format(support_format_combination[j][i])
                 ret_str += ('            (inOut[pos].type == DataType::{} && inOut[pos].format == TensorFormat::{}) ||\n'.format(option, tensor_format))
             option = get_trt_datatype(support_format_combination[len(support_format_combination) - 1][i])
+            tensor_format = get_trt_tensor_format(support_format_combination[len(support_format_combination) - 1][i])
             ret_str += ('            (inOut[pos].type == DataType::{} && inOut[pos].format == TensorFormat::{});\n'.format(option, tensor_format))
             ret_str += ('    }\n')
         else:
@@ -440,11 +447,13 @@ def codegen_get_support_format_combination(config):
             ret_str += ('    {\n')
             ret_str += ('        is_supported =\n')
             for j in range(len(support_format_combination) - 1):
-                inputs_option = get_input_combination_str('inOut', support_format_combination[j], num_input, tensor_format)
+                tensor_format = get_trt_tensor_format(support_format_combination[j][i])
+                inputs_option = get_input_combination_str('inOut', support_format_combination[j], num_input)
                 option = get_trt_datatype(support_format_combination[j][i])
                 ret_str += ('            ({}inOut[pos].type == DataType::{} && inOut[pos].format == TensorFormat::{}) ||\n'.format(inputs_option, option, tensor_format))
-            inputs_option = get_input_combination_str('inOut', support_format_combination[len(support_format_combination) - 1], num_input, tensor_format)
+            inputs_option = get_input_combination_str('inOut', support_format_combination[len(support_format_combination) - 1], num_input)
             option = get_trt_datatype(support_format_combination[len(support_format_combination) - 1][i])
+            tensor_format = get_trt_tensor_format(support_format_combination[len(support_format_combination) - 1][i])
             ret_str += ('            ({}inOut[pos].type == DataType::{} && inOut[pos].format == TensorFormat::{});\n'.format(inputs_option, option, tensor_format))
             ret_str += ('    }\n')
     return ret_str

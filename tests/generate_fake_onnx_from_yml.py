@@ -53,13 +53,13 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def get_tensor_dtype(format):
-    if format == "float32" or format == "float16" or format == "int8":
+def get_tensor_dtype(datatype):
+    if datatype == "float32" or datatype == "float16" or datatype == "int8":
         return np.float32
-    elif format == "int32":
+    elif datatype == "int32":
         return np.int32
     else:
-        raise ValueError(f"Unsupported format {format}")
+        raise ValueError(f"Unsupported datatype {datatype}")
 
 def get_np_shape(dims):
     new_dims = []
@@ -74,7 +74,7 @@ def create_onnx(save_dir, plugin_name, inputs, outputs, attrs, support_format_co
     node_inputs = []
     for i in range(len(inputs)):
         t = inputs[i]
-        dtype = get_tensor_dtype(support_format_combination[0][i])
+        dtype = get_tensor_dtype(support_format_combination[0][i].datatype)
         shape = get_np_shape(t.dims)
         v = gs.Variable(name=t.name, dtype=dtype, shape=shape)
         node_inputs.append(v)
@@ -83,7 +83,7 @@ def create_onnx(save_dir, plugin_name, inputs, outputs, attrs, support_format_co
     node_outputs = []
     for i in range(len(outputs)):
         t = outputs[i]
-        dtype = get_tensor_dtype(support_format_combination[0][i+len(inputs)])
+        dtype = get_tensor_dtype(support_format_combination[0][i+len(inputs)].datatype)
         shape = get_np_shape(t.dims)
         v = gs.Variable(name=t.name, dtype=dtype, shape=shape)
         node_outputs.append(v)

@@ -31,6 +31,23 @@ class Attribute:
         self.type = ""
         self.default_value = None
 
+class Format:
+    def __init__(self, datatype, tensor_format):
+        self.datatype = datatype
+        self.tensor_format = tensor_format.upper()
+    def validate(self):
+        assert self.datatype in ['float32', 'float16', 'int8', 'int32'], 'Unsupported datatype'
+        assert self.tensor_format in ['LINEAR', 'CHW32', 'CHW2', 'HWC8', 'HWC16', 'DHWC8', 'CHW4'], 'Unsupported data format'
+        # refer to https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#ipluginv2
+        if self.datatype == 'float32':
+            assert self.tensor_format in ['LINEAR', 'CHW32'], 'Unsupported data format for float32'
+        if self.datatype == 'float16':
+            assert self.tensor_format in ['LINEAR', 'CHW2', 'HWC8', 'HWC16', 'DHWC8', 'CHW4'], 'Unsupported data format for float16'
+        if self.datatype == 'int8':
+            assert self.tensor_format in ['LINEAR', 'CHW32', 'CHW4'], 'Unsupported data format for int8'
+        if self.datatype == 'int32':
+            assert self.tensor_format in ['LINEAR'], 'Unsupported data format for int32'
+
 class Config:
     '''Config for a custom plugin
     Attributes
@@ -81,12 +98,16 @@ class Config:
     def AddSupportFormatCombination(self, format_combination):
         l = []
         assert format_combination != "need_user_to_specify", "please specify the format combination"
-        formats = format_combination.split('+')
-        assert len(formats) == (len(self.inputs) + len(self.outputs)), 'error: tensor counts mismatch'
-        for format in formats:
-            assert format in ['float32', 'float16', 'int8', 'int32'], 'unsupported format, please set it like float32+float16+int8'
-            l.append(format)
-        self.support_format_combination.append(l)
+        items = format_combination.split('+')
+        formats = []
+        for item in items:
+            datatype = item.split(':')[0]
+            tensor_format = item.split(':')[1] if len(item.split(':')) > 1 else "LINEAR"
+            format = Format(datatype, tensor_format)
+            format.validate()
+            formats.append(format)
+        assert len(formats) == (len(self.inputs) + len(self.outputs)), 'Error: formats mismatch'
+        self.support_format_combination.append(formats)
 
     def AddAttr(self, attr_name, attr_type, default_value = None):
         a = Attribute()
